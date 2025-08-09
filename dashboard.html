@@ -3,34 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>CONTROL PANEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-space: #0a0e17;
+            --void: #000000;
+            --neon-blue: #00f0ff;
+            --matrix: #00ff4c;
+            --starlight: #e0e0e0;
+            --electric: #0066ff;
+            --cyber-purple: #bd00ff;
+            --alert: #ff5555;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--deep-space);
+            color: var(--neon-blue);
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 80% 70%, rgba(0, 102, 255, 0.05) 0%, transparent 25%),
+                linear-gradient(to bottom, var(--void), var(--deep-space));
+        }
+
+        .cyber-grid {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(10, 14, 23, 0.8);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            color: var(--matrix);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .username {
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--alert);
+            color: var(--alert);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 85, 85, 0.2);
+            box-shadow: 0 0 10px var(--alert);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .console-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+        }
+
+        .console {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: var(--starlight);
+            overflow-y: auto;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .console-line {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .system {
+            color: var(--neon-blue);
+        }
+
+        .input {
+            color: var(--matrix);
+        }
+
+        .response {
+            color: var(--starlight);
+        }
+
+        .error {
+            color: var(--alert);
+        }
+
+        .console-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-btn {
+            background: linear-gradient(to right, var(--matrix), var(--neon-blue));
+            color: var(--deep-space);
+        }
+
+        .stop-btn {
+            background: linear-gradient(to right, var(--alert), #ff0000);
+            color: white;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .stop-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .console-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 4px;
+            color: var(--starlight);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .console-input:disabled {
+            opacity: 0.5;
+        }
+
+        .console-input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .send-btn {
+            padding: 0 20px;
+            background: linear-gradient(to right, var(--electric), var(--cyber-purple));
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .send-btn:hover {
+            box-shadow: 0 0 15px var(--electric);
+        }
+
+        .status-panel {
+            width: 300px;
+            background: rgba(10, 14, 23, 0.8);
+            border-left: 1px solid rgba(0, 240, 255, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 20px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .status-item {
+            margin-bottom: 15px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--starlight);
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-weight: 700;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+
+        .active {
+            color: var(--matrix);
+        }
+
+        .inactive {
+            color: var(--alert);
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(0, 240, 255, 0.1);
+            animation: scan 8s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: -1px; }
+            100% { top: 100%; }
+        }
+
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: transparent;
+        }
+
+        .console-corner-tl {
+            top: 10px;
+            left: 10px;
+            border-top-color: var(--neon-blue);
+            border-left-color: var(--neon-blue);
+        }
+
+        .console-corner-tr {
+            top: 10px;
+            right: 10px;
+            border-top-color: var(--neon-blue);
+            border-right-color: var(--neon-blue);
+        }
+
+        .console-corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-bottom-color: var(--neon-blue);
+            border-left-color: var(--neon-blue);
+        }
+
+        .console-corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-bottom-color: var(--neon-blue);
+            border-right-color: var(--neon-blue);
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
 </head>
 <body>
-    <div class="console-container">
-        <div class="console-header">
-            <h2>SYSTEM CONTROL PANEL</h2>
+    <div class="cyber-grid"></div>
+    <div class="glow-effect"></div>
+    <div class="scanline"></div>
+    
+    <div class="dashboard-container">
+        <div class="header">
+            <h1 class="logo">BLUE<span>NET</span></h1>
             <div class="user-info">
-                <span id="usernameDisplay"></span>
-                <button id="logoutBtn">TERMINATE SESSION</button>
+                <span class="username" id="usernameDisplay">USER_${Math.floor(Math.random() * 10000)}</span>
+                <button class="logout-btn" id="logoutBtn">LOGOUT</button>
             </div>
         </div>
         
-        <div class="console-body">
-            <div class="console-output" id="consoleOutput">
-                <!-- Console output will appear here -->
+        <div class="main-content">
+            <div class="console-container">
+                <div class="corner console-corner-tl"></div>
+                <div class="corner console-corner-tr"></div>
+                <div class="corner console-corner-bl"></div>
+                <div class="corner console-corner-br"></div>
+                
+                <div class="console" id="consoleOutput">
+                    <div class="console-line system">SYSTEM INITIALIZED</div>
+                    <div class="console-line system">READY FOR COMMANDS</div>
+                    <div class="console-line system">TYPE 'start' TO BEGIN</div>
+                </div>
+                
+                <div class="console-controls">
+                    <button class="control-btn start-btn" id="startBtn">START</button>
+                    <button class="control-btn stop-btn" id="stopBtn">STOP</button>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" class="console-input" id="consoleInput" placeholder="Enter command..." disabled>
+                    <button class="send-btn" id="sendBtn" disabled>></button>
+                </div>
             </div>
             
-            <div class="console-controls">
-                <button id="startBtn" class="control-btn start">START</button>
-                <button id="stopBtn" class="control-btn stop" disabled>STOP</button>
-                <div class="input-group">
-                    <input type="text" id="consoleInput" placeholder="Enter command..." disabled>
-                    <button id="sendBtn" disabled>SEND</button>
+            <div class="status-panel">
+                <h2 class="panel-title">SESSION STATUS</h2>
+                
+                <div class="status-item">
+                    <div class="status-label">CONNECTION</div>
+                    <div class="status-value inactive" id="connectionStatus">OFFLINE</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-label">PAIRED NUMBER</div>
+                    <div class="status-value" id="pairedNumber">NONE</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-label">LAST ACTIVITY</div>
+                    <div class="status-value" id="lastActivity">-</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-label">SESSION TIME</div>
+                    <div class="status-value" id="sessionTime">00:00:00</div>
+                </div>
+                
+                <div class="status-item">
+                    <div class="status-label">UPTIME</div>
+                    <div class="status-value" id="uptime">100%</div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="/static/js/script.js"></script>
+
+    <script>
+        // DOM elements
+        const consoleOutput = document.getElementById('consoleOutput');
+        const consoleInput = document.getElementById('consoleInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const pairedNumber = document.getElementById('pairedNumber');
+        const lastActivity = document.getElementById('lastActivity');
+        const sessionTime = document.getElementById('sessionTime');
+        
+        // State
+        let isRunning = false;
+        let currentNumber = null;
+        let eventSource = null;
+        let sessionStartTime = null;
+        let sessionTimer = null;
+        
+        // Load username from localStorage
+        const username = localStorage.getItem('username') || `USER_${Math.floor(Math.random() * 10000)}`;
+        usernameDisplay.textContent = username;
+        
+        // Add line to console
+        function addConsoleLine(text, type = 'system') {
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = text;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            
+            // Update last activity
+            const now = new Date();
+            lastActivity.textContent = now.toLocaleTimeString();
+        }
+        
+        // Handle input
+        function handleInput() {
+            const input = consoleInput.value.trim();
+            if (!input) return;
+            
+            addConsoleLine(`> ${input}`, 'input');
+            consoleInput.value = '';
+            
+            if (!isRunning) {
+                if (input.toLowerCase() === 'start') {
+                    startBtn.click();
+                } else {
+                    addConsoleLine('System is offline. Type "start" to begin.', 'error');
+                }
+                return;
+            }
+            
+            // Process commands
+            if (input.toLowerCase() === 'help') {
+                addConsoleLine('Available commands:', 'system');
+                addConsoleLine('start - Activate system', 'system');
+                addConsoleLine('stop - Deactivate system', 'system');
+                addConsoleLine('clear - Reset console', 'system');
+                addConsoleLine('[number] - Pair device', 'system');
+                return;
+            }
+            
+            if (input.toLowerCase() === 'clear') {
+                consoleOutput.innerHTML = '';
+                addConsoleLine('Console cleared', 'system');
+                return;
+            }
+            
+            // Process number input
+            if (/^\d+$/.test(input)) {
+                processNumber(input);
+            } else {
+                addConsoleLine('Invalid input. Please enter a number.', 'error');
+            }
+        }
+        
+        // Process number input
+        async function processNumber(number) {
+            try {
+                const response = await fetch('/api/process-number', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({ number })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    currentNumber = number;
+                    pairedNumber.textContent = number;
+                    addConsoleLine(`Number ${number} paired successfully. Waiting for code...`, 'system');
+                } else {
+                    addConsoleLine(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addConsoleLine('Connection error. Please try again.', 'error');
+            }
+        }
+        
+        // Start console
+        startBtn.addEventListener('click', async () => {
+            if (isRunning) return;
+            
+            try {
+                const response = await fetch('/api/start-console', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    isRunning = true;
+                    startBtn.disabled = true;
+                    stopBtn.classList.add('active');
+                    consoleInput.disabled = false;
+                    sendBtn.disabled = false;
+                    
+                    connectionStatus.textContent = 'ONLINE';
+                    connectionStatus.classList.remove('inactive');
+                    connectionStatus.classList.add('active');
+                    
+                    addConsoleLine('System activated', 'system');
+                    addConsoleLine('Blue\'s MD online. Please input number', 'system');
+                    
+                    // Start session timer
+                    sessionStartTime = new Date();
+                    updateSessionTime();
+                    sessionTimer = setInterval(updateSessionTime, 1000);
+                    
+                    // Connect to updates
+                    connectToUpdates();
+                } else {
+                    addConsoleLine(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addConsoleLine('Connection error. Please try again.', 'error');
+            }
+        });
+        
+        // Stop console
+        stopBtn.addEventListener('click', async () => {
+            if (!isRunning) return;
+            
+            try {
+                const response = await fetch('/api/stop-console', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    isRunning = false;
+                    startBtn.disabled = false;
+                    stopBtn.classList.remove('active');
+                    consoleInput.disabled = true;
+                    sendBtn.disabled = true;
+                    
+                    connectionStatus.textContent = 'OFFLINE';
+                    connectionStatus.classList.remove('active');
+                    connectionStatus.classList.add('inactive');
+                    
+                    // Clear session timer
+                    clearInterval(sessionTimer);
+                    
+                    addConsoleLine('System deactivated', 'system');
+                    
+                    // Close event source
+                    if (eventSource) {
+                        eventSource.close();
+                        eventSource = null;
+                    }
+                } else {
+                    addConsoleLine(`Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addConsoleLine('Connection error. Please try again.', 'error');
+            }
+        });
+        
+        // Connect to server-sent events
+        function connectToUpdates() {
+            eventSource = new EventSource(`/api/console-updates?token=${localStorage.getItem('authToken')}`);
+            
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                addConsoleLine(data.message, 'response');
+            };
+            
+            eventSource.onerror = (error) => {
+                console.error('SSE error:', error);
+                addConsoleLine('Connection lost. Attempting to reconnect...', 'error');
+            };
+        }
+        
+        // Update session time
+        function updateSessionTime() {
+            const now = new Date();
+            const diff = Math.floor((now - sessionStartTime) / 1000);
+            
+            const hours = Math.floor(diff / 3600);
+            const minutes = Math.floor((diff % 3600) / 60);
+            const seconds = diff % 60;
+            
+            sessionTime.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            window.location.href = '/login.html';
+        });
+        
+        // Event listeners
+        sendBtn.addEventListener('click', handleInput);
+        consoleInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleInput();
+        });
+        
+        // Initial console message
+        addConsoleLine('Type "help" for available commands', 'system');
+    </script>
 </body>
 </html>
