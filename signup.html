@@ -391,7 +391,7 @@
                 
                 if (response.ok) {
                     localStorage.setItem('authToken', result.token);
-                    window.location.href = '/dashboard';
+                    window.location.href = '/dashboard.html';
                 } else {
                     alert('Registration failed: ' + (result.message || 'Please try again'));
                 }
