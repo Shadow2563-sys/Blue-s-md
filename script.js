@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             initDashboardPage();
             break;
         default:
-            window.location.href = '/login';
+            window.location.href = '/login.html';
     }
 });
 
@@ -90,7 +90,7 @@ function initLoadingScreen() {
 
     // Redirect after 10 seconds
     setTimeout(() => {
-        window.location.href = '/login';
+        window.location.href = '/login.html';
     }, 10000);
 }
 
