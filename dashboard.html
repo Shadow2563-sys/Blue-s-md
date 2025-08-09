@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="console-container">
+        <div class="console-header">
+            <h2>SYSTEM CONTROL PANEL</h2>
+            <div class="user-info">
+                <span id="usernameDisplay"></span>
+                <button id="logoutBtn">TERMINATE SESSION</button>
+            </div>
+        </div>
+        
+        <div class="console-body">
+            <div class="console-output" id="consoleOutput">
+                <!-- Console output will appear here -->
+            </div>
+            
+            <div class="console-controls">
+                <button id="startBtn" class="control-btn start">START</button>
+                <button id="stopBtn" class="control-btn stop" disabled>STOP</button>
+                <div class="input-group">
+                    <input type="text" id="consoleInput" placeholder="Enter command..." disabled>
+                    <button id="sendBtn" disabled>SEND</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
