@@ -296,7 +296,7 @@
         </form>
         
         <div class="switch-mode">
-            No credentials? <a href="/signup">Request access</a>
+            No credentials? <a href="/signup.html">Request access</a>
         </div>
     </div>
 
@@ -343,7 +343,7 @@
                 
                 if (response.ok) {
                     localStorage.setItem('authToken', result.token);
-                    window.location.href = '/dashboard';
+                    window.location.href = '/dashboard.html';
                 } else {
                     alert('Authentication failed: ' + (result.message || 'Invalid credentials'));
                 }
