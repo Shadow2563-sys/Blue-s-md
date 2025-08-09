@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="tech-panel">
+            <h2>SYSTEM ACCESS</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Username/Email</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="glow-button">AUTHENTICATE</button>
+            </form>
+            <p class="switch-mode">No access? <a href="/signup">Request credentials</a></p>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
